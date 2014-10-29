@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="2772919690">
+    <data-source source="LOCAL" name="Rails ManualCharges: development" uuid="17a45906-6377-420f-a0ef-467058bb9ee5">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\UMDXCTM1\Desktop\CustomInk\VendorStatements\ManualCharges\db\development.sqlite3</jdbc-url>
+      <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="Rails ManualCharges: mysql_prod" uuid="61d310bf-24af-4ccd-81d0-f35cd87e4015">
+      <driver-ref>mysql</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://127.0.0.1/manual_charges</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>dfdedfc2dfcfdfc9dfc2dfc5dfd9dfcfdfc4df9b</user-password>
+      <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="Rails ManualCharges: test" uuid="564ee0ed-4454-4781-a8d0-16dfbb1715c3">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\UMDXCTM1\Desktop\CustomInk\VendorStatements\ManualCharges\db\test.sqlite3</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+

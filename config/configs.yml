@@ -1,0 +1,74 @@
+bodek_ftp: {
+	host: 65.171.160.51,	
+	username: Fdm4ftp,	
+	password: bodek2ftp,	
+	path: FROMBODEK
+
+}
+
+customink: {
+	url: 127.0.0.1,
+	username: root,
+	password: thechosen1,
+	database: customink
+}
+
+golden: {
+	url: 127.0.0.1,
+	username: root,
+	password: thechosen1,
+	database: golden
+}
+
+golden_ftp: {
+	site: ftp.gsactivewear.com,
+	username: customink,
+	password: w7gEsT!upH,
+	directory: /gst/outbox/856_ASN
+}
+
+pct_process: {
+	url: 127.0.0.1,
+	username: root,
+	password: thechosen1,
+	database: pct_process
+}
+
+# production: {
+# 	adapter: oracle_enhanced,
+# 	host: oracle01.staging.customink.com,
+# 	port: 1521,
+# 	database: CINK,
+# 	username: user_excella,
+# 	password: kuQavaqu6wut
+# }
+
+production:
+  adapter: 'oracle_enhanced'
+  username: 'user_excella'
+  password: 'kuQavaqu6wut'
+  database: '(DESCRIPTION = (ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP) (HOST = oracle01.staging.customink.com)(PORT = 1521)))(CONNECT_DATA = (SID = CINK)))'
+
+manual_charges: {
+	url: 127.0.0.1,
+	username: root,
+	password: thechosen1,
+	database: manual_charges
+}
+
+blank_pricing: {
+	username: reporting,
+	password: iR45XTv7lHa48rffr2cb2
+}
+
+MySQL: {
+	host: odt.cpi0ixamwlqy.us-east-1.rds.amazonaws.com,
+	username: user_excella,
+	password: qAwnEhBh42mGYVWK
+}
+
+dashing: {
+	server: dca-zabbix01/zabbix/api_jsonrpc.php,
+	User: Dashing,
+	Password: R3p0rt1ng15
+}

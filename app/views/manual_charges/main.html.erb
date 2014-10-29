@@ -1,0 +1,332 @@
+<style type="text/css">
+	.box {
+		border-style: solid;
+    	border-width: 2px;
+    	width: 100%;
+    	
+    	padding-bottom: 15px;
+    	border: 3;
+	}
+	.button {
+		position: fixed;
+    	
+    	right: 5%;
+	}
+	.titles {
+		font-size: 20px;
+	}
+	h1 {
+
+	}
+	.head {
+		text-align: center;
+	}
+	.subhead {
+		
+	}
+
+	#notify_insert_update {
+		text-align: left;
+		background-color: #00CC66;
+	}
+
+	#notify_delete {
+		text-align: left;
+		background-color: #CC0000;
+		color: white;
+	}
+
+</style>
+
+<script type="text/javascript">
+	var index = 1;
+
+	function addRow(){
+
+		var id = '<td><input type="text" name="orderid[' + index + ']"></td>';
+		var reason = '<td><select name="reason[' + index + ']" onchange="other(this.value, this);" id="otherLabel">' + '<% @reasons.each do |reason| %><%= options_for_select([reason[0]]) %><% end %>' + '</select>';
+		var otherInput = '<input name="other[' + index + ']" type="text" class="otherID" style="display:none;"></td>';
+		var amount = '<td>$<input type="text" name="amount[' + index + ']"></td>';		
+		var del = '<td><button id="deleteButton" onclick="deleteRow(this)">Delete</button></td>';
+
+		$("table").append('<tr>' + id + reason + otherInput + amount + del + '</tr>');
+
+		index = index + 1;
+	}
+
+    function addRowAll(){
+        var vend = '<td><select name="vend[' + index + ']"><option> </option><% @vendors.each do |vendor| %><%= options_for_select([vendor[1]], @vendor) %><% end %></select></td>';
+        var id = '<td><input type="text" name="orderid[' + index + ']"></td>';
+        var reason = '<td><select name="reason[' + index + ']" onchange="other(this.value, this);" id="otherLabel">' + '<% @reasons.each do |reason| %><%= options_for_select([reason[0]]) %><% end %>' + '</select></td>';
+        var otherInput = '<td><input name="other[' + index + ']" type="text" class="otherID" style="display:none;"></td>';
+        var amount = '<td>$<input type="text" name="amount[' + index + ']"></td>';
+        var del = '<td><button id="deleteButton" onclick="deleteRow(this)">Delete</button></td>';
+
+        $("table").append('<tr>' + vend + id + reason + otherInput + amount + del + '</tr>');
+
+        index = index + 1;
+    }
+
+	function deleteRow(r){
+        var bool = confirm("Are you sure?");
+        if (bool == true){
+            var i = r.parentNode.parentNode.rowIndex;
+            var val = r.value;
+            document.getElementById("myTable").deleteRow(i);
+            document.getElementById("myForm").action ="/manual_charges/delete_info(val)";
+            document.getElementById("myForm").submit();
+        }
+	}
+
+	function confirmation(){
+		var bool = confirm("Are you sure?");
+		if (bool == true){
+            //document.getElementById('delete').value = 2;
+			document.getElementById("myForm").submit();
+		}
+	}
+
+	function statusChange(){
+		document.getElementById("myForm").submit();
+	}
+
+	function other(val, r){
+
+		var element = document.getElementsByClassName('others');
+	 	var i = 1;
+
+	 	var rand = r.parentNode.parentNode.rowIndex;
+	 	var bool = false;
+
+	 	for(i = 1; i <= element.length; i++){
+	 		
+	 		if(rand == i){
+	 			bool = true;
+	 			if(val=='Other')
+			   		element[i-1].style.display='block';
+			 	else  
+				   	element[i-1].style.display='none';
+	 		}
+	 	}
+
+	 	var newElements = document.getElementsByClassName('otherID');
+	 	var k = i;
+	 	var len = element.length + newElements.length;
+	 	var idx = 0;
+
+	 	for(k = i; k <= len; k++){
+	 		
+	 		if(rand == k){
+	 			if(val=='Other')
+			   		newElements[idx].style.display='block';
+			 	else  
+				   	newElements[idx].style.display='none';
+	 		}
+	 		idx++;
+	 	}
+
+	}
+
+
+	$(document).ready(function(){
+	    $('#paid').click(function(){
+		    
+	    	var bool = confirm("Are you sure?");
+
+	    	if (bool == true){
+
+	    		document.getElementById("myForm").action ="/manual_charges/mark_paid";
+
+				document.getElementById("myForm").submit();
+
+			}	
+
+	    });
+
+	    setTimeout(function() {
+		  $("#notify_insert_update").fadeOut().empty();
+			}, 3000);
+	    setTimeout(function() {
+		  $("#notify_delete").fadeOut().empty();
+			}, 3000);
+
+	});
+
+	window.onbeforeunload = function(){
+        $("delete").value = nil;
+	}
+
+</script>
+
+
+
+<html>
+	<title>Manual Charges</title>
+	<div class= "head">
+		<h1>Manual Charges</h1>
+		<% if @insert_confirm == true %>
+			<p id='notify_insert_update'>&nbsp;Item(s) successfully inserted!</p>
+		<% elsif @delete_confirm == true %>
+			<p id='notify_delete'>&nbsp;Item successfully deleted!</p>
+		<% elsif @update_confirm == true %>
+			<p id='notify_insert_update'>&nbsp;Item(s) successfully updated!</p>
+		<% end %>
+	</div>
+
+
+	<body>
+        <p></p>
+		<% if @vendor == nil
+				@vendor = "all" # default value 
+		   end %>
+
+		<form id="myForm" method="get" action="/manual_charges/main">
+			<div class="subhead">
+				<select name="vendors" onchange="statusChange()">
+					<option value="all">All Vendors</option>
+					<% @vendors.each do |vendor| %>
+						<%= options_for_select([vendor[1]], @vendor) %>
+					<% end %>
+
+				</select>
+				<input class="button" type="button" value="Mark Paid" id="paid">
+			</div>
+            </br>
+            <div>
+
+              Sort by:
+              <select name="sort" onchange="statusChange()">
+                <% @sorts.each do |sort| %>
+                    <%= options_for_select([sort], @sort) %>
+                <% end %>
+
+              </select>
+            </div>
+
+
+			</br>
+			<table class="box" id="myTable">
+
+				<% if @vendor == "all" %>
+
+					<tr class="titles">
+						<td><strong>Vendor</strong></td>
+						<td><strong>Order ID</strong></td>
+						<td><strong>Reason</strong></td>
+                        <td><strong>Description</strong></td>
+						<td><strong>Amount</strong></td>
+
+
+					</tr>
+					<%  @idx = -1
+						@tmp_o = "orderid["
+						@tmp_r = "reason["
+						@tmp_a = "amount["
+
+						@tmp_other = "other["
+
+						@info.each do |data| %>
+						<tr>
+							
+							<td><%= data[3] %></td>
+							<td><%= text_field_tag(@tmp_o + @idx.to_s + "]", data[0], class: "row") %></td>
+							<td><select name=<%= @tmp_r + @idx.to_s + "]"%> onchange="other(this.value, this);" class="row">
+
+                                <% @reasons.each do |reason| %>
+									<%= options_for_select([reason[0]], data[1]) %>
+								<% end %>
+
+								</select>
+                            </td>
+                            <td><%if data[4] != ""%>
+                                    <%= text_field_tag(@tmp_other + @idx.to_s + "]",data[4] ,class: "others", style: 'display:block;') %>
+                                 <% else %>
+                                    <%= text_field_tag(@tmp_other + @idx.to_s + "]",data[4] ,class: "others", style: 'display:none;') %>
+                                <% end %>
+                            </td>
+							<td>$<%= text_field_tag(@tmp_a + @idx.to_s + "]", data[2], class: "row") %></td>
+							<td><%= button_tag("Delete", type:'button', onclick:"deleteRow(this)", name:"delete", value:data[0], id:'delete') %></td>
+
+						</tr>
+					<% 
+							@idx = @idx - 1
+						end %>
+			</table>
+			</br>
+
+        <%= button_tag('Confirm', type: 'button', onclick: "confirmation()", name: 'confirm', class: 'confirm') %>
+		
+		</form>
+        <button id="addButton" onclick="addRowAll()">Add New Row</button>
+
+				<% else %>
+
+					<tr class="titles">
+						<td><strong>Order ID</strong></td>
+						<td><strong>Reason</strong></td>
+                        <td><strong>Description</strong></td>
+						<td><strong>Amount</strong></td>
+					</tr>
+
+					<%  @idx = -1
+						@tmp_o = "orderid["
+						@tmp_r = "reason["
+						@tmp_a = "amount["
+
+						@tmp_other = "other["
+
+						@info.each do |data| %>
+						<tr>
+
+							<td><%= text_field_tag(@tmp_o + @idx.to_s + "]", data[0], class: "row") %></td>
+							<td><select name=<%= @tmp_r + @idx.to_s + "]"%> onchange="other(this.value, this);" class="row">
+
+								<% @reasons.each do |reason| %>
+									<%= options_for_select([reason[0]], data[1]) %>
+								<% end %>
+
+								</select>
+                            </td>
+
+                              <td><%if data[3] != ""%>
+                                    <%= text_field_tag(@tmp_other + @idx.to_s + "]",data[3] ,class: "others", style: 'display:block;') %>
+                                <% else %>
+                                    <%= text_field_tag(@tmp_other + @idx.to_s + "]",data[3] ,class: "others", style: 'display:none;') %>
+                                <% end %>
+                              </td>
+
+							<td>$<%= text_field_tag(@tmp_a + @idx.to_s + "]", data[2], class: "row") %></td>
+							<td><%= button_tag("Delete", {class: "deleteButton",  onclick:"deleteRow(this)", name:"delete", value:data[0]}) %></td>
+								
+							
+						</tr>
+					<% 
+							@idx = @idx - 1
+						end %>
+
+						<tr id = "newInfo">
+							<td><input id="in" type="text" name="orderid[0]" class="newRow"></td>
+							<td>
+                                <select name="reason[0]" onchange="other(this.value, this);" id="otherLabel">
+								    <% @reasons.each do |reason| %>
+									    <%= options_for_select([reason[0]]) %>
+								    <% end %>
+                                </select>
+                            </td>
+							<td><input name="other[0]" type="text" class="otherID" style='display:none;'></td>
+							<td>$<input type="text" name="amount[0]" class="newRow"></td>
+							<td><button id="deleteButton" onclick="deleteRow(this)">Delete</button></td>
+						</tr>
+
+			</table>
+			</br>
+			
+			<%= button_tag('Confirm', type: 'button', onclick: "confirmation()", name: 'confirm', class: 'confirm') %>
+		
+
+		</form>
+		<button id="addButton" onclick="addRow()">Add New Row</button>
+				
+				<% end %>
+	</body>
+</html>
